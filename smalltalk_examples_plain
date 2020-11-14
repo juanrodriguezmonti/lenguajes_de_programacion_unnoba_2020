@@ -1,0 +1,368 @@
+Ejemplos de código extra, de Smalltalk. Estos ejemplos sirven para ilustrar comportamientos que
+no se adjuntaron por cuestiones de espacio en el artículo principal, y también, funcionan como ejemplos extra 
+a lo que ya se explicó y mostró en el artículo.
+
+
+Ejemplos básicos de looping e impresión
+
+" Envia un mensaje a Transcript "
+    Transcript show: 'hola mundo '.
+
+
+" calcular el factorial de 10 y enviarlo a Transcript "
+    Transcript show: 10 factorial.
+
+    10 timesRepeat: [
+        Transcript show:'hola'.
+        Transcript cr.
+    ].
+
+" iterar una colección "
+    #('a' 'b' 'c' ) do:[:each |
+        Transcript show: each.
+        Transcript cr.
+    ].
+
+" procesar colecciones) "
+    Transcript show: #( 1 2 3 4 5) .
+
+    Transcript show:
+        ( #( 1 2 3 4 5 ) collect: [:i | i sqt] )
+
+    Transcript show:
+        ( #( 1 2 3 4 5 ) select:[:i | i even ] )
+" bloques recursivos ( ya vimos un ejemplo de factorial recursivo ) "
+
+    |bFac|
+
+    bFac:=
+        [:n | 
+            n > 1 
+                ifTrue:[ n * (bFac value:n-1) ]
+                ifFalse: [ n ]].
+
+    bFac value:100.
+
+2 elevado:128 
+
+while-like comportamiento en Smalltalk 
+
+|i| 
+i:=5. 
+[i >0] whileTrue:[ 
+ Transcript show: ((i*2) asString) ; cr. 
+ i:=i-1. 
+].
+
+Constantes 
+
+| b |
+b := true.                
+b := false.
+
+Booleanos
+
+| b x y |
+x := 1. y := 2.
+b := (x = y).             
+b := (x ~= y). 
+
+Operaciones aritmeticas
+
+| x |
+x := 6 + 3.                             "suma"
+x := 6 - 3.                             "resta"
+x := 6 * 3.                             "mult"
+x := 1 + 2 * 3. 
+
+Bitwise
+
+| b x |
+x := 16rFF bitAnd: 16r0F.           "and"
+x := 16rF0 bitOr: 16r0F.            "or"
+x := 16rFF bitXor: 16r0F.  
+
+Como especificamos en el artículo, por cuestiones de diseño, Smalltalk no tiene conversiones de tipo como otros lenguajes. 
+Sin embargo, si bien no son importnates desde el punto de vista del estudio del lenguaje, es posible hacer algunas conversiones
+de este tipo, como vemos acá con números y chars, etc.
+
+| x |
+x := 3.99 asInteger.               "convertir numbero a entero"
+x := 3.99 asFraction.              "convertir numbero a fracción"
+x := 3 asFloat.                    "convertir numbero a float"
+x := 65 asCharacter.               "convertir entero a char"
+x := $A asciiValue.                "convert character to integer"
+
+Bloques de código más complejos
+
+| x y z |
+x := [ y := 1. z := 2. ]. x value.                          "block simple"
+x := [ :argOne :argTwo |   argOne, ' and ' , argTwo.].      "block con argumentos"
+Transcript show: (x value: 'Primero' value: 'Segundo'); cr. 
+
+Como vimos, varios tipos de métodos, veamos un llamado a métodos
+| x |
+x := 2 sqrt.                                  "unario"
+x := 2 raisedTo: 10.                          "keyword"
+x := 194 * 9.                                 "binario"
+
+Más condicionales
+
+| x |
+x > 10 ifTrue: [Transcript show: 'ifTrue'; cr].     "if then"
+x > 10 ifFalse: [Transcript show: 'ifFalse'; cr].   "if else"
+
+"if then else"
+x > 10                                                      
+   ifTrue: [Transcript show: 'ifTrue'; cr]
+   ifFalse: [Transcript show: 'ifFalse'; cr].
+
+"if else then"
+x > 10                                                      
+   ifFalse: [Transcript show: 'ifFalse'; cr]
+   ifTrue: [Transcript show: 'ifTrue'; cr].
+Transcript
+   show:
+      (x > 10
+         ifTrue: ['ifTrue']
+         ifFalse: ['ifFalse']);
+   cr.
+
+"nested if then else"
+Transcript                                                  
+   show:
+      (x > 10
+         ifTrue: [x > 5
+            ifTrue: ['A']
+            ifFalse: ['B']]
+         ifFalse: ['C']);
+   cr.
+
+"switch"
+switch := Dictionary new.     
+switch at: $A put: [Transcript show: 'Caso A'; cr].
+switch at: $B put: [Transcript show: 'Caso  B'; cr].
+switch at: $C put: [Transcript show: 'Caso C'; cr].
+result := (switch at: $B) value.
+
+Chars 
+
+| x y |
+x := $A.                         "asignación char"
+y := x isLowercase.              "lower case"
+y := x isUppercase.              "upper case"
+y := x isLetter.                 "letter"
+y := x isDigit.   
+
+Símbolos
+
+| b x y |
+x := #Hola.                                      "symbol assignment"
+y := #Symbol, #Concatenation.                     "symbol concatenation con string como resultado"
+b := x isEmpty.                                   "testea si está vacio"
+y := x size.                                      "string size"
+y := x at: 2. 
+
+Operaciones con Strings 
+
+| b x y |
+x := 'es un astring'.                           "string asignación"
+x := 'String', 'Concatenation'.                    "string concatenacion"
+b := x isEmpty.                                    "testea si está vacio"
+y := x size.                                       "string size"
+y := x at: 2.                                      "char en ubicación"
+y := x copyFrom: 2 to: 4.                          "substring"
+y := x indexOf: $a ifAbsent: [0]. 
+
+Arreglos 
+
+| b x y sum max |
+x := #(4 3 2 1).                                 "array constante"
+x := Array with: 5 with: 4 with: 3 with: 2.      "crea array con 4 elementos"
+x := Array new: 4.                               "aloca array de tamaño especificado"
+x                                                "definir los elementos del array"
+   at: 1 put: 5;
+   at: 2 put: 4;
+   at: 3 put: 3;
+   at: 4 put: 2.
+
+y := x occurrencesOf: 3.                         "numero de ocurrencias en la coleccion"
+x do: [:a | Transcript show: a printString; cr]. "iterar el array"
+b := x conform: [:a | (a >= 1) & (a <= 4)].      "testear condicion en los elementos"
+sum := 0. x do: [:a | sum := sum + a]. sum.      "suma los elementos del array"
+
+Ordered Collection 
+
+| b x y sum max |
+x := OrderedCollection 
+     with: 4 with: 3 with: 2 with: 1.            "crea colección con 4 elementos"
+y := x addFirst: 5.                              "agrega elemento al inicio"
+y := x removeFirst.                              "remueve el primer elemento"
+
+Sorted Collection  ( lo mismo que ordered, pero siguiendo un criterio de ordenamiento dado )
+
+| b x y sum max |
+x := SortedCollection 
+     with: 4 with: 3 with: 2 with: 1.              "crea coleccion con 4 elementos"
+x := SortedCollection new.                         "aloca colleccion"
+
+Bag. Como Ordered Collection, pero los elementos no estan en ningun orden en particular.
+
+| b x y sum max |
+x := Bag with: 4 with: 3 with: 2 with: 1.        "crea coleccion con 4 elementos"
+x := Bag new.                                    "aloca coleccion"
+x add: 4; add: 3; add: 1; add: 2; yourself.      "agrega elemento a la colección "
+y := x size.                                     "numero de elementos"
+
+Identity set 
+
+| b x y sum max |
+x := Set with: 4 with: 3 with: 2 with: 1.        "crea coleccion con 4 elementos"
+x := Set new.                                    "aloca coleccion"
+
+Interval 
+
+| b x y sum max |
+x := Interval from: 5 to: 10.                     "crea objeto interval"
+x := 5 to: 10.
+x := Interval from: 5 to: 10 by: 2.               "crea objeto interval con especificación de incremento"
+x := 5 to: 10 by: 2.
+
+Identity dictionary 
+
+| b x y |
+x := Dictionary new.                   "aloca  coleccion"
+x add: #a->4; 
+  add: #b->3; 
+  add: #c->1; 
+  add: #d->2; yourself.                "agrega elemento a la coleccion"
+
+Filestream 
+
+| b x ios |
+ios := FileStream newFileNamed: 'hola.txt'.
+ios nextPut: $H; cr.
+ios nextPutAll: 'Hola archivo'; cr.
+'Hola ARCHIVO' printOn: ios.
+'Hola archivo' storeOn: ios.
+ios close.
+ios := FileStream oldFileNamed: 'ios.txt'.
+[(x := ios nextLine) notNil] whileTrue: [Transcript show: x; cr].
+ios position: 3.
+x := ios position.
+x := ios next.
+x := ios peek.
+b := ios atEnd.
+ios close.
+
+Date 
+
+| x y |
+x := Date today.                                "crea un date para hoy"
+x := Date dateAndTimeNow.                       "date con current time/date"
+x := Date readFromString: '01/02/1999'.         "date formateado "
+y := Date dayOfWeek: #Monday.                   "dias de la semana como enteros del  (1-7)"
+
+Time 
+
+| x y |
+x := Time now.                                      "crea time del horario actual"
+x := Time readFromString: '3:47:26 pm'.             "crea time  de string formateado"
+
+Mensajes dinámicos, llamado y ejecución
+
+| receiver message result argument keyword1 keyword2 argument1 argument2 |
+
+"mensaje unario"
+receiver := 5.
+message := 'factorial' asSymbol.
+result := receiver perform: message.
+result := Compiler evaluate: ((receiver storeString), ' ', message).
+result := (Message new setSelector: message arguments: #()) sentTo: receiver.
+
+"mensaje binario"
+receiver := 1.
+message := '+' asSymbol.
+argument := 2.
+result := receiver perform: message withArguments: (Array with: argument).
+result := Compiler evaluate: ((receiver storeString), ' ', message, ' ', (argument storeString)).
+result := (Message new setSelector: message arguments: (Array with: argument)) sentTo: receiver.
+
+"mensaje keyword"
+receiver := 12.
+keyword1 := 'entre:' asSymbol.
+keyword2 := 'y:' asSymbol.
+argument1 := 10.
+argument2 := 20.
+
+result := receiver
+   perform: (keyword1, keyword2) asSymbol
+   withArguments: (Array with: argument1 with: argument2).
+
+result := Compiler evaluate:
+   ((receiver storeString), ' ', keyword1, (argument1 storeString) , ' ', keyword2, (argument2 storeString)).
+
+result := (Message
+   new
+      setSelector: (keyword1, keyword2) asSymbol
+      arguments: (Array with: argument1 with: argument2))
+   sentTo: receiver.
+
+Clases y meta-Clases
+| b x |
+x := String name.                     "nombre de clase"
+x := String category.                 "categoria"
+x := String comment.                  "comentario de la clase"
+x := String kindOfSubclass.           "subclass type"
+x := String definition.               "definicion de clase"
+x := String allSharedPools.
+
+Herencia 
+
+Object subclass: 'Vehiculo'
+    instanceVariables: 'pasajeros '
+
+pasajeros
+   ^pasajeros
+
+agregarPasajero: unaPersona
+   pasajeros add: unaPersona
+
+sacarPasajero: unaPersona
+   pasajeros remove: unaPersona
+
+init
+   pasajeros := OrderedCollection new.
+
+----
+
+Vehiculo subclass: 'Bus'
+    instanceVariables: 'ruta'
+
+ruta: r
+   ruta := r
+
+ruta
+   ^ruta
+
+init
+   super init.  
+   self ruta: 0 
+
+Un ejemplo más completo. Fizzbuzz en Smalltalk.
+
+1 to: 100 do: [:n|
+	(n \\ 15 == 0) ifTrue: [
+		'FizzBuzz' printNl.
+	] ifFalse: [
+		(n \\ 5 == 0) ifTrue: [
+			'Buzz' printNl.
+		] ifFalse: [
+			(n \\ 3 == 0) ifTrue: [
+				'Fizz' printNl.
+			] ifFalse: [
+				n printNl.
+			]
+		]
+	]
+].
